@@ -1,0 +1,3158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behind the Panels — Not Yet: A shadowSentience Story</title>
+
+  <!-- Caveat from Google Fonts (the only external dependency) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       FONT DECLARATIONS — Local fonts from design-pack
+    ============================================================ */
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Satoshi-Regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Satoshi-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Satoshi-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Satoshi';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Satoshi-Italic.otf') format('opentype');
+      font-weight: 400;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Cardo';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Cardo-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Cardo';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Cardo-Italic.ttf') format('truetype');
+      font-weight: 400;
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'Cardo';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/Cardo-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'DepartureMono';
+      src: url('../../read_only_data_source/design-pack/fonts/font-files/DepartureMono-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      /* Backgrounds */
+      --bg-void:       hsl(238, 48%, 8%);
+      --bg-surface:    hsl(240, 35%, 13%);
+      --bg-raised:     hsl(238, 30%, 18%);
+
+      /* Borders */
+      --border-subtle: hsla(0, 0%, 100%, 0.07);
+      --border-strong: hsla(0, 0%, 100%, 0.14);
+
+      /* Text */
+      --text-primary:   hsl(38, 25%, 88%);
+      --text-secondary: hsl(38, 18%, 62%);
+      --text-tertiary:  hsl(38, 12%, 42%);
+
+      /* Amber accent */
+      --amber:        hsl(38, 88%, 54%);
+      --amber-text:   hsl(38, 80%, 66%);
+      --amber-dim:    hsl(38, 55%, 40%);
+      --amber-glow:   hsla(38, 88%, 54%, 0.15);
+
+      /* Parchment */
+      --parchment-bg:   hsl(38, 35%, 82%);
+      --parchment-text: hsl(28, 55%, 18%);
+      --parchment-rule: hsla(30, 40%, 30%, 0.18);
+
+      /* Semantic */
+      --green:          hsl(82, 35%, 52%);
+      --orange:         hsl(32, 75%, 55%);
+      --red:            hsl(8, 58%, 58%);
+      --blue:           hsl(210, 40%, 60%);
+      --terminal-green: hsl(140, 55%, 48%);
+
+      /* Typography */
+      --font-pipeline:  'Satoshi', sans-serif;
+      --font-story:     'Cardo', serif;
+      --font-machine:   'DepartureMono', monospace;
+      --font-character: 'Caveat', cursive;
+
+      /* Type scale — perfect fourth (1.333), base 17px */
+      --size-xs:      10px;
+      --size-sm:      12px;
+      --size-base:    17px;
+      --size-md:      19px;
+      --size-lg:      22px;
+      --size-xl:      30px;
+      --size-2xl:     36px;
+      --size-3xl:     42px;
+      --size-hero:    52px;
+
+      /* Spacing — 8px grid */
+      --sp-1:  8px;
+      --sp-2:  16px;
+      --sp-3:  24px;
+      --sp-4:  32px;
+      --sp-5:  48px;
+      --sp-6:  64px;
+      --sp-7:  96px;
+      --sp-8:  128px;
+
+      /* Section gap */
+      --section-gap: 140px;
+
+      /* Layout */
+      --rail-width:  210px;
+      --content-max: 920px;
+
+      /* Border radius */
+      --radius-sm:  3px;
+      --radius-md:  8px;
+      --radius-lg:  12px;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-story);
+      font-size: var(--size-base);
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ============================================================
+       STARFIELD CANVAS — Hero Background
+    ============================================================ */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       PAGE LAYOUT — RAIL + MAIN
+    ============================================================ */
+    .page-wrapper {
+      display: flex;
+      align-items: flex-start;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- LEFT RAIL ---- */
+    .rail {
+      position: sticky;
+      top: 0;
+      width: var(--rail-width);
+      height: 100vh;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: var(--sp-5) var(--sp-2) var(--sp-3) var(--sp-3);
+      border-right: 1px solid var(--border-subtle);
+      overflow-y: auto;
+      background-color: hsla(238, 48%, 8%, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .rail-title {
+      font-family: var(--font-pipeline);
+      font-weight: 700;
+      font-size: var(--size-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--sp-4);
+      padding-bottom: var(--sp-2);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .rail-phase {
+      margin-bottom: var(--sp-3);
+    }
+
+    .rail-phase-label {
+      font-family: var(--font-pipeline);
+      font-weight: 700;
+      font-size: var(--size-xs);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--sp-1);
+    }
+
+    .rail-nodes {
+      list-style: none;
+      padding-left: var(--sp-1);
+      border-left: 2px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .rail-node {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-1);
+      padding: 5px 0;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .rail-node:hover {
+      color: var(--text-primary);
+    }
+
+    .rail-node:hover .rail-dot {
+      border-color: var(--amber-dim);
+      box-shadow: 0 0 6px hsla(38, 88%, 54%, 0.3);
+    }
+
+    .rail-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-tertiary);
+      flex-shrink: 0;
+      margin-left: -6px;
+      background-color: var(--bg-void);
+      transition: all 0.3s ease;
+    }
+
+    .rail-node.active .rail-dot {
+      background-color: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 12px hsla(38, 88%, 54%, 0.6);
+    }
+
+    .rail-node.visited .rail-dot {
+      background-color: var(--amber-dim);
+      border-color: var(--amber-dim);
+    }
+
+    .rail-node.active .rail-node-label {
+      color: var(--amber-text);
+    }
+
+    .rail-node.visited .rail-node-label {
+      color: var(--text-secondary);
+    }
+
+    .rail-node-label {
+      font-family: var(--font-pipeline);
+      font-weight: 500;
+      font-size: var(--size-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      transition: color 0.2s ease;
+    }
+
+    .rail-divider {
+      border: none;
+      border-top: 1px solid var(--border-subtle);
+      margin: var(--sp-3) 0 var(--sp-2);
+    }
+
+    .rail-cost-label {
+      font-family: var(--font-machine);
+      font-size: var(--size-xs);
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .rail-cost-value {
+      font-family: var(--font-machine);
+      font-size: var(--size-md);
+      color: var(--amber-text);
+      font-variant-numeric: tabular-nums;
+      transition: text-shadow 0.3s ease;
+    }
+
+    .rail-cost-value.pulse {
+      text-shadow: 0 0 12px hsla(38, 88%, 54%, 0.5);
+    }
+
+    /* ---- MAIN CONTENT ---- */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 0 var(--sp-6) var(--sp-8) var(--sp-6);
+    }
+
+    /* ============================================================
+       SECTIONS
+    ============================================================ */
+    .section {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding-top: var(--section-gap);
+    }
+
+    .section:first-of-type {
+      padding-top: var(--sp-7);
+    }
+
+    /* Phase / act label above section */
+    .section-act {
+      font-family: var(--font-pipeline);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber-text);
+      margin-bottom: var(--sp-2);
+    }
+
+    .section-title {
+      font-family: var(--font-pipeline);
+      font-weight: 700;
+      font-size: var(--size-xl);
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: var(--sp-2);
+    }
+
+    .section-subtitle {
+      font-family: var(--font-pipeline);
+      font-weight: 500;
+      font-size: var(--size-lg);
+      line-height: 1.3;
+      color: var(--text-secondary);
+      margin-bottom: var(--sp-3);
+    }
+
+    .section-body {
+      font-family: var(--font-story);
+      font-size: var(--size-base);
+      line-height: 1.65;
+      color: var(--text-primary);
+      max-width: 660px;
+      margin-bottom: var(--sp-4);
+    }
+
+    /* ============================================================
+       EVIDENCE + LETTER COLUMNS
+    ============================================================ */
+    .codon-columns {
+      display: grid;
+      grid-template-columns: 58% 42%;
+      gap: var(--sp-4);
+      align-items: start;
+      margin-top: var(--sp-4);
+    }
+
+    /* ============================================================
+       EVIDENCE PANELS
+    ============================================================ */
+    .evidence-panel {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .evidence-panel:hover {
+      border-color: var(--border-strong);
+      box-shadow: 0 4px 24px hsla(238, 48%, 4%, 0.4);
+    }
+
+    .evidence-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-1);
+      padding: var(--sp-1) var(--sp-2);
+      border-bottom: 1px solid var(--border-subtle);
+      background-color: var(--bg-raised);
+    }
+
+    /* Terminal dot trio decoration */
+    .evidence-header::before {
+      content: '';
+      display: inline-flex;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 10px 0 0 var(--orange), 20px 0 0 var(--green);
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .evidence-label {
+      font-family: var(--font-machine);
+      font-size: var(--size-xs);
+      color: var(--amber-text);
+      letter-spacing: 0.05em;
+    }
+
+    .evidence-body {
+      padding: var(--sp-2);
+    }
+
+    /* Event log lines */
+    .event-log {
+      list-style: none;
+    }
+
+    .event-log-line {
+      font-family: var(--font-machine);
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+      padding: 3px 0;
+      display: flex;
+      gap: var(--sp-1);
+      flex-wrap: wrap;
+    }
+
+    /* Typewriter hidden state */
+    .event-log-line.typewriter-hidden {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+
+    .event-log-line.typewriter-visible {
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .event-log-line .ts {
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .event-log-line .ev-codon { color: var(--amber-text); }
+    .event-log-line .ev-success { color: var(--green); }
+    .event-log-line .ev-warn { color: var(--orange); }
+    .event-log-line .ev-error { color: var(--red); }
+    .event-log-line .ev-info { color: var(--blue); }
+    .event-log-line .ev-terminal { color: var(--terminal-green); }
+    .event-log-line .ev-cost { color: var(--amber-text); font-variant-numeric: tabular-nums; }
+
+    /* Blinking cursor */
+    .typewriter-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 13px;
+      background-color: var(--terminal-green);
+      animation: blink-cursor 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .typewriter-cursor.active {
+      opacity: 1;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .event-log-divider {
+      border: none;
+      border-top: 1px solid var(--border-subtle);
+      margin: var(--sp-1) 0;
+    }
+
+    /* reviewer block inside evidence */
+    .reviewer-block {
+      margin-bottom: var(--sp-2);
+    }
+
+    .reviewer-label {
+      font-family: var(--font-machine);
+      font-size: var(--size-xs);
+      color: var(--amber-text);
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+    }
+
+    .reviewer-quote {
+      font-family: var(--font-machine);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      padding: var(--sp-1) var(--sp-2);
+      border-left: 2px solid var(--border-strong);
+    }
+
+    /* selection surgery block */
+    .surgery-block {
+      font-family: var(--font-machine);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .surgery-block .surgery-header {
+      color: var(--text-tertiary);
+      margin-bottom: var(--sp-1);
+    }
+
+    .surgery-block .surgery-divider {
+      color: var(--text-tertiary);
+      margin-bottom: var(--sp-1);
+    }
+
+    .surgery-block .surgery-highlight {
+      color: var(--text-primary);
+    }
+
+    /* grades table inside evidence */
+    .grades-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .grades-table td {
+      font-family: var(--font-machine);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 4px 6px;
+      vertical-align: top;
+    }
+
+    .grades-table td:first-child {
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      padding-left: 0;
+      width: 120px;
+    }
+
+    .grades-table td:nth-child(2) {
+      color: var(--amber-text);
+      width: 32px;
+      font-weight: bold;
+    }
+
+    .grades-table td:last-child {
+      color: var(--text-secondary);
+      font-style: italic;
+      font-family: var(--font-story);
+      font-size: 12px;
+    }
+
+    .grade-aplus { color: var(--green) !important; }
+    .grade-a     { color: var(--amber-text) !important; }
+    .grade-aminus { color: var(--amber-dim) !important; }
+    .grade-bplus { color: var(--text-secondary) !important; }
+
+    /* panel approval log */
+    .panel-status {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-family: var(--font-machine);
+      font-size: 13px;
+      line-height: 1.45;
+      padding: 3px 0;
+    }
+    .panel-status .ps-ts { color: var(--text-tertiary); }
+    .panel-status .ps-approved { color: var(--green); }
+    .panel-status .ps-flagged { color: var(--red); }
+    .panel-status .ps-label { color: var(--text-secondary); }
+
+    /* ============================================================
+       STAT CALLOUTS
+    ============================================================ */
+    .stat-callout {
+      margin: var(--sp-3) 0;
+    }
+
+    .stat-number {
+      font-family: var(--font-machine);
+      font-size: var(--size-3xl);
+      color: var(--amber-text);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 8px;
+    }
+
+    .stat-caption {
+      font-family: var(--font-story);
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 400px;
+    }
+
+    /* inline stat row */
+    .stat-row {
+      display: flex;
+      gap: var(--sp-3);
+      flex-wrap: wrap;
+      margin-top: var(--sp-2);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-item-value {
+      font-family: var(--font-machine);
+      font-size: var(--size-lg);
+      color: var(--amber-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-item-label {
+      font-family: var(--font-pipeline);
+      font-size: var(--size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+    }
+
+    /* ============================================================
+       HERO STATS — Dramatic Treatment
+    ============================================================ */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-2);
+      margin-top: var(--sp-5);
+      padding: var(--sp-4) 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hero-stat {
+      text-align: center;
+      padding: var(--sp-2) 0;
+    }
+
+    .hero-stat-value {
+      font-family: var(--font-machine);
+      font-size: clamp(28px, 4vw, 42px);
+      color: var(--amber-text);
+      font-variant-numeric: tabular-nums;
+      display: block;
+      line-height: 1;
+      text-shadow: 0 0 20px hsla(38, 88%, 54%, 0.2);
+    }
+
+    .hero-stat-label {
+      font-family: var(--font-pipeline);
+      font-size: var(--size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      display: block;
+      margin-top: var(--sp-1);
+    }
+
+    /* ============================================================
+       EPOCH'S PARCHMENT LETTERS — Signature Element
+    ============================================================ */
+    .epoch-letter {
+      background: linear-gradient(
+        to bottom,
+        hsl(38, 35%, 82%) 0%,
+        hsl(35, 30%, 76%) 70%,
+        hsl(33, 28%, 72%) 100%
+      );
+      background-image:
+        /* Paper grain noise via repeating gradient trick */
+        repeating-linear-gradient(
+          45deg,
+          transparent 0px,
+          transparent 2px,
+          hsla(30, 20%, 50%, 0.015) 2px,
+          hsla(30, 20%, 50%, 0.015) 3px
+        ),
+        /* Horizontal ruled lines */
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 27px,
+          var(--parchment-rule) 27px,
+          var(--parchment-rule) 28px
+        ),
+        /* Base gradient */
+        linear-gradient(
+          to bottom,
+          hsl(38, 35%, 82%) 0%,
+          hsl(35, 30%, 76%) 70%,
+          hsl(33, 28%, 72%) 100%
+        );
+      border-radius: var(--radius-sm);
+      padding: var(--sp-4);
+      box-shadow:
+        3px 4px 0px hsla(30, 40%, 20%, 0.25),
+        0 8px 24px hsla(238, 48%, 4%, 0.5);
+      color: var(--parchment-text);
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .epoch-letter:hover {
+      box-shadow:
+        3px 4px 0px hsla(30, 40%, 20%, 0.3),
+        0 12px 32px hsla(238, 48%, 4%, 0.6),
+        0 0 40px -10px hsla(38, 88%, 54%, 0.12);
+    }
+
+    /* Subtle folded corner effect */
+    .epoch-letter::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(
+        225deg,
+        var(--bg-void) 0%,
+        var(--bg-void) 50%,
+        hsl(33, 25%, 68%) 50%,
+        hsl(35, 28%, 72%) 100%
+      );
+      border-radius: 0;
+    }
+
+    .epoch-letter-text {
+      font-family: var(--font-character);
+      font-size: var(--size-md);
+      line-height: 1.75;
+      color: var(--parchment-text);
+    }
+
+    .epoch-letter-text p + p {
+      margin-top: var(--sp-2);
+    }
+
+    .epoch-letter-attribution {
+      margin-top: var(--sp-2);
+      text-align: right;
+      font-family: var(--font-character);
+      font-size: var(--size-md);
+      font-style: italic;
+      color: var(--parchment-text);
+    }
+
+    /* First letter ceremonial arrival */
+    .epoch-letter-first {
+      opacity: 0;
+      transform: translateY(-8px) rotate(-0.6deg);
+      transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+    }
+
+    .epoch-letter-first.revealed {
+      opacity: 1;
+      transform: translateY(0) rotate(-0.6deg);
+    }
+
+    /* ============================================================
+       COMIC PANELS — With Hover States
+    ============================================================ */
+    .panel-image {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+      cursor: pointer;
+    }
+
+    .panel-image:hover {
+      transform: scale(1.015);
+      box-shadow: 0 8px 32px hsla(238, 48%, 4%, 0.6), 0 0 40px hsla(38, 88%, 54%, 0.08);
+      border-color: var(--border-strong);
+    }
+
+    .panel-caption {
+      font-family: var(--font-machine);
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: var(--sp-1);
+      font-style: italic;
+    }
+
+    .panel-badge {
+      display: inline-block;
+      font-family: var(--font-machine);
+      font-size: var(--size-sm);
+      color: var(--amber-text);
+      background-color: var(--bg-raised);
+      border: 1px solid var(--amber-dim);
+      border-radius: var(--radius-sm);
+      padding: 3px 8px;
+      margin-top: var(--sp-1);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .panel-badge:hover {
+      box-shadow: 0 0 12px hsla(38, 88%, 54%, 0.3);
+    }
+
+    /* ============================================================
+       CHILD'S VERDICT — SPEECH BUBBLE CALLOUT
+    ============================================================ */
+    .verdict-callout {
+      background-color: hsl(44, 55%, 95%);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-3) var(--sp-4);
+      margin: var(--sp-3) 0;
+      position: relative;
+      box-shadow: 0 4px 16px hsla(238, 48%, 4%, 0.3);
+    }
+
+    .verdict-callout::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 36px;
+      border: 12px solid transparent;
+      border-top-color: hsl(44, 55%, 95%);
+      border-bottom: 0;
+    }
+
+    .verdict-quote {
+      font-family: var(--font-story);
+      font-size: var(--size-md);
+      font-style: italic;
+      color: hsl(28, 55%, 20%);
+      line-height: 1.5;
+    }
+
+    .verdict-attribution {
+      font-family: var(--font-machine);
+      font-size: 12px;
+      color: hsl(28, 40%, 45%);
+      margin-top: var(--sp-1);
+    }
+
+    /* ============================================================
+       CHARACTER TRIO
+    ============================================================ */
+    .character-trio {
+      display: flex;
+      gap: var(--sp-3);
+      align-items: flex-end;
+      margin: var(--sp-3) 0;
+    }
+
+    .character-figure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-1);
+      flex: 1;
+      transition: transform 0.2s ease;
+    }
+
+    .character-figure:hover {
+      transform: translateY(-4px);
+    }
+
+    .character-figure img {
+      max-height: 160px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .character-label {
+      font-family: var(--font-machine);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+
+    .character-caption {
+      font-family: var(--font-story);
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-top: var(--sp-1);
+      grid-column: 1 / -1;
+    }
+
+    /* ============================================================
+       THE 2:47 AM MOMENT — Dramatic Treatment
+    ============================================================ */
+    .moment-2am {
+      text-align: center;
+      padding: 160px 0;
+      position: relative;
+    }
+
+    .moment-2am::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, hsla(38, 88%, 54%, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .moment-2am-text {
+      font-family: var(--font-machine);
+      font-size: 36px;
+      color: var(--amber-text);
+      letter-spacing: 0.04em;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 40px hsla(38, 88%, 54%, 0.35), 0 0 80px hsla(38, 88%, 54%, 0.1);
+      position: relative;
+    }
+
+    /* ============================================================
+       THE "NOT YET" SEQUENCE
+    ============================================================ */
+    .not-yet-sequence {
+      text-align: center;
+      padding: var(--sp-7) 0;
+    }
+
+    .not-yet-line {
+      font-family: var(--font-story);
+      font-size: var(--size-lg);
+      color: var(--text-secondary);
+      line-height: 2.2;
+      opacity: 0;
+    }
+
+    .not-yet-line.visible {
+      opacity: 1;
+    }
+
+    .not-yet-now {
+      font-family: var(--font-story);
+      font-size: 28px;
+      color: var(--amber-text);
+      line-height: 2.2;
+      opacity: 0;
+      text-shadow: 0 0 20px hsla(38, 88%, 54%, 0.6);
+    }
+
+    .not-yet-now.visible {
+      opacity: 1;
+    }
+
+    /* ============================================================
+       PROLOGUE — HERO
+    ============================================================ */
+    .hero-section {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding-top: var(--sp-6);
+      text-align: center;
+    }
+
+    .hero-cover-wrapper {
+      display: inline-block;
+      position: relative;
+      box-shadow: 0 0 100px 30px hsla(38, 88%, 54%, 0.12), 0 0 200px 60px hsla(38, 88%, 54%, 0.05);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .hero-cover-wrapper img {
+      max-width: 860px;
+      width: 100%;
+    }
+
+    .hero-title {
+      font-family: var(--font-pipeline);
+      font-weight: 700;
+      font-size: clamp(36px, 6vw, 52px);
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-top: var(--sp-6);
+      margin-bottom: var(--sp-2);
+      line-height: 1.05;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-story);
+      font-size: var(--size-lg);
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-bottom: var(--sp-5);
+    }
+
+    /* The hero gap — dramatic stat below hero */
+    .hero-gap {
+      margin: var(--sp-6) auto 0;
+      max-width: 640px;
+      text-align: center;
+    }
+
+    .hero-gap-number {
+      font-family: var(--font-machine);
+      font-size: clamp(48px, 10vw, 80px);
+      color: var(--amber-text);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 40px hsla(38, 88%, 54%, 0.25);
+      display: block;
+    }
+
+    .hero-gap-arrow {
+      font-family: var(--font-pipeline);
+      font-size: var(--size-sm);
+      color: var(--text-tertiary);
+      margin: var(--sp-2) 0;
+      display: block;
+    }
+
+    .hero-gap-label {
+      font-family: var(--font-story);
+      font-size: 15px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .ideas-file-block {
+      text-align: left;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      max-width: 640px;
+      margin: var(--sp-5) auto 0;
+    }
+
+    .ideas-file-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-1);
+      padding: var(--sp-1) var(--sp-2);
+      border-bottom: 1px solid var(--border-subtle);
+      background-color: var(--bg-raised);
+    }
+
+    .ideas-file-header::before {
+      content: '';
+      display: inline-flex;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 10px 0 0 var(--orange), 20px 0 0 var(--green);
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .ideas-file-label {
+      font-family: var(--font-machine);
+      font-size: var(--size-xs);
+      color: var(--amber-text);
+    }
+
+    .ideas-file-body {
+      padding: var(--sp-2) var(--sp-3);
+      font-family: var(--font-machine);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .ideas-file-body .heading {
+      color: var(--text-primary);
+      font-weight: bold;
+    }
+
+    /* ============================================================
+       COST FLOW CANVAS — SVG Visualization
+    ============================================================ */
+    .cost-flow-container {
+      margin: var(--sp-5) auto;
+      max-width: var(--content-max);
+      position: relative;
+    }
+
+    .cost-flow-canvas {
+      width: 100%;
+      height: 200px;
+      display: block;
+    }
+
+    /* ============================================================
+       FILMSTRIP (EPILOGUE)
+    ============================================================ */
+    .filmstrip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-2);
+      margin: var(--sp-4) 0;
+    }
+
+    .filmstrip-panel {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+      cursor: pointer;
+    }
+
+    .filmstrip-panel:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 24px hsla(238, 48%, 4%, 0.5), 0 0 24px hsla(38, 88%, 54%, 0.08);
+      border-color: var(--amber-dim);
+      z-index: 2;
+    }
+
+    .filmstrip-panel img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    .filmstrip-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 4px 6px;
+      background: linear-gradient(to top, hsla(238, 48%, 8%, 0.9), transparent);
+      font-family: var(--font-machine);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      transition: color 0.2s ease;
+    }
+
+    .filmstrip-panel:hover .filmstrip-label {
+      color: var(--amber-text);
+    }
+
+    /* ============================================================
+       PULL QUOTE
+    ============================================================ */
+    .pull-quote {
+      font-family: var(--font-story);
+      font-size: var(--size-md);
+      font-style: italic;
+      color: var(--text-secondary);
+      max-width: 540px;
+      border-left: 2px solid var(--amber-dim);
+      padding-left: var(--sp-2);
+      margin: var(--sp-3) 0;
+    }
+
+    /* ============================================================
+       UTILITIES
+    ============================================================ */
+    .label-tag {
+      font-family: var(--font-pipeline);
+      font-size: var(--size-sm);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+    }
+
+    .amber { color: var(--amber-text); }
+    .mono  { font-family: var(--font-machine); }
+    .mt-1  { margin-top: var(--sp-1); }
+    .mt-2  { margin-top: var(--sp-2); }
+    .mt-3  { margin-top: var(--sp-3); }
+    .mt-4  { margin-top: var(--sp-4); }
+    .mt-5  { margin-top: var(--sp-5); }
+
+    /* ============================================================
+       SCROLL REVEAL SETUP — JS will add .revealed
+       Note: epoch-letter elements with inline rotate() use a wrapper
+       approach so the translateY reveal doesn't override the rotation.
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delayed {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease 0.22s, transform 0.7s ease 0.22s;
+    }
+
+    .reveal-delayed.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Epoch letters carry inline rotate() which wins CSS specificity over
+       transform from .reveal-delayed. The net effect is letters fade in
+       (opacity-only) while keeping their rotation — exactly correct. */
+
+    /* ============================================================
+       RESPONSIVE — Mobile
+    ============================================================ */
+    @media (max-width: 1024px) {
+      .codon-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .rail {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: var(--sp-1) var(--sp-2);
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+        overflow-x: auto;
+        overflow-y: visible;
+        gap: var(--sp-2);
+      }
+
+      .rail-phase { margin-bottom: 0; }
+
+      .rail-nodes {
+        display: flex;
+        flex-direction: row;
+        gap: var(--sp-1);
+        border-left: none;
+        border-top: none;
+        padding-left: 0;
+      }
+
+      .rail-nodes::before { display: none; }
+
+      .rail-node-label { display: none; }
+
+      .rail-title,
+      .rail-phase-label {
+        display: none;
+      }
+
+      .rail-cost-section {
+        margin-left: auto;
+      }
+
+      .page-wrapper {
+        flex-direction: column;
+      }
+
+      .main-content {
+        padding: 0 var(--sp-2) var(--sp-6) var(--sp-2);
+      }
+
+      .hero-title { font-size: 36px; }
+
+      .hero-gap-number {
+        font-size: clamp(40px, 12vw, 64px);
+      }
+
+      .filmstrip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .character-trio {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Reduce dramatic padding on mobile — still readable but not wasteful */
+      .moment-2am {
+        padding: 80px 0;
+      }
+
+      /* Section gap reduced on mobile */
+      .section {
+        padding-top: 80px;
+      }
+
+      /* Stat items wrap cleanly on small screens */
+      .stat-row {
+        flex-wrap: wrap;
+        gap: var(--sp-2);
+      }
+
+      /* Verdict callout — remove rotation on mobile for clean alignment */
+      .verdict-callout {
+        transform: none !important;
+      }
+
+      /* Epoch letters — remove rotation on mobile */
+      .epoch-letter {
+        transform: none !important;
+      }
+
+      /* Not-yet sequence — tighter line height on mobile */
+      .not-yet-line,
+      .not-yet-now {
+        line-height: 1.8;
+      }
+    }
+
+    /* ============================================================
+       SKIP LINK — Accessibility
+    ============================================================ */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: var(--sp-3);
+      z-index: 9999;
+      background-color: var(--bg-surface);
+      color: var(--amber-text);
+      font-family: var(--font-pipeline);
+      font-size: var(--size-sm);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      padding: var(--sp-1) var(--sp-2);
+      border: 1px solid var(--amber-dim);
+      border-radius: var(--radius-sm);
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: var(--sp-1);
+    }
+
+    /* ============================================================
+       FOCUS STATES — Keyboard Navigation
+    ============================================================ */
+    :focus-visible {
+      outline: 2px solid var(--amber-text);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .rail-node:focus-visible {
+      outline: 2px solid var(--amber-text);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .rail-node:focus-visible .rail-dot {
+      border-color: var(--amber-text);
+      box-shadow: 0 0 10px hsla(38, 88%, 54%, 0.5);
+    }
+
+    .panel-image:focus-visible {
+      outline: 2px solid var(--amber-text);
+      outline-offset: 4px;
+    }
+
+    .filmstrip-panel:focus-visible {
+      outline: 2px solid var(--amber-text);
+      outline-offset: 3px;
+    }
+
+    /* ============================================================
+       IMAGE LOADING & ERROR STATES
+    ============================================================ */
+    /* Skeleton pulse for loading state */
+    @keyframes skeleton-pulse {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 0.7; }
+    }
+
+    img {
+      background-color: var(--bg-surface);
+    }
+
+    /* Error state: broken image fallback */
+    img::after {
+      content: attr(alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      inset: 0;
+      background: var(--bg-surface);
+      color: var(--text-tertiary);
+      font-family: var(--font-machine);
+      font-size: 11px;
+      text-align: center;
+      padding: var(--sp-2);
+      border-radius: inherit;
+    }
+
+    /* Loading skeleton for panel images */
+    .panel-image-wrapper {
+      position: relative;
+      background-color: var(--bg-surface);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .panel-image-wrapper::before {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        var(--bg-surface) 0%,
+        var(--bg-raised) 50%,
+        var(--bg-surface) 100%
+      );
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.5s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes skeleton-shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .panel-image-wrapper img {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       EMPTY STATE — for evidence panels with no data
+    ============================================================ */
+    .evidence-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--sp-6) var(--sp-4);
+      color: var(--text-tertiary);
+      text-align: center;
+      gap: var(--sp-2);
+    }
+
+    .evidence-empty-icon {
+      font-size: 32px;
+      opacity: 0.4;
+    }
+
+    .evidence-empty-text {
+      font-family: var(--font-machine);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ============================================================
+       REDUCED MOTION
+    ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal,
+      .reveal-delayed,
+      .epoch-letter-first {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .not-yet-line,
+      .not-yet-now {
+        opacity: 1;
+        animation: none;
+      }
+
+      .event-log-line.typewriter-hidden {
+        opacity: 1;
+        transform: none;
+      }
+
+      .typewriter-cursor {
+        display: none;
+      }
+
+      #starfield-canvas {
+        display: none;
+      }
+
+      .panel-image-wrapper::before {
+        display: none;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       FLIPBOOK
+    ═══════════════════════════════════════════════════ */
+    .flipbook-container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .flipbook {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+      background: var(--bg-void);
+      cursor: pointer;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 1px rgba(201, 162, 108, 0.15);
+    }
+
+    .flipbook-page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: left center;
+      backface-visibility: hidden;
+    }
+
+    .flipbook-page.active {
+      opacity: 1;
+      transform: perspective(1200px) rotateY(0deg);
+      z-index: 2;
+    }
+
+    .flipbook-page.flip-out {
+      opacity: 1;
+      transform: perspective(1200px) rotateY(-90deg);
+      z-index: 3;
+    }
+
+    .flipbook-page.flip-in {
+      opacity: 1;
+      transform: perspective(1200px) rotateY(40deg);
+      z-index: 1;
+    }
+
+    .flipbook-page img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .flipbook-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      margin-top: var(--sp-2);
+    }
+
+    .flipbook-btn {
+      background: var(--bg-raised);
+      color: var(--amber-glow);
+      border: 1px solid var(--border-amber);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flipbook-btn:hover {
+      background: var(--amber-deep);
+      transform: scale(1.1);
+    }
+
+    .flipbook-btn:active {
+      transform: scale(0.95);
+    }
+
+    .flipbook-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
+      min-width: 180px;
+      text-align: center;
+    }
+
+    .flipbook-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: var(--sp-1);
+    }
+
+    .flipbook-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(237, 232, 223, 0.12);
+      cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+      border: none;
+      padding: 0;
+    }
+
+    .flipbook-dot.active {
+      background: var(--amber-glow);
+      transform: scale(1.5);
+    }
+
+    .flipbook-dot:hover {
+      background: rgba(201, 162, 108, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Skip to main content — accessibility -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Starfield Canvas — Ambient Background -->
+<canvas id="starfield-canvas" aria-hidden="true"></canvas>
+
+<div class="page-wrapper">
+
+  <!-- ============================================================
+       LEFT RAIL — Pipeline Timeline
+  ============================================================ -->
+  <aside class="rail" id="rail" aria-label="Pipeline navigation">
+    <div class="rail-title">Pipeline</div>
+
+    <div class="rail-phase">
+      <div class="rail-phase-label">Discovery</div>
+      <ul class="rail-nodes" id="rail-nodes-discovery">
+        <li class="rail-node active" data-section="codon-1" tabindex="0" role="button" aria-label="Navigate to Codon 1: Read" aria-current="true">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 1: Read</span>
+        </li>
+        <li class="rail-node" data-section="codon-2" tabindex="0" role="button" aria-label="Navigate to Codon 2: Diversity">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 2: Diversity</span>
+        </li>
+        <li class="rail-node" data-section="codon-3" tabindex="0" role="button" aria-label="Navigate to Codon 3: Visualize">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 3: Visualize</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rail-phase">
+      <div class="rail-phase-label">Design</div>
+      <ul class="rail-nodes" id="rail-nodes-design">
+        <li class="rail-node" data-section="codon-4" tabindex="0" role="button" aria-label="Navigate to Codon 4: Select">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 4: Select</span>
+        </li>
+        <li class="rail-node" data-section="codon-5" tabindex="0" role="button" aria-label="Navigate to Codon 5: Review">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 5: Review</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rail-phase">
+      <div class="rail-phase-label">Creation</div>
+      <ul class="rail-nodes" id="rail-nodes-creation">
+        <li class="rail-node" data-section="codon-6" tabindex="0" role="button" aria-label="Navigate to Codon 6: Generate #1">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 6: Generate #1</span>
+        </li>
+        <li class="rail-node" data-section="codon-7" tabindex="0" role="button" aria-label="Navigate to Codon 7: Generate #2">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 7: Generate #2</span>
+        </li>
+        <li class="rail-node" data-section="codon-8" tabindex="0" role="button" aria-label="Navigate to Codon 8: Generate #3">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 8: Generate #3</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="rail-phase">
+      <div class="rail-phase-label">Quality</div>
+      <ul class="rail-nodes" id="rail-nodes-quality">
+        <li class="rail-node" data-section="codon-9" tabindex="0" role="button" aria-label="Navigate to Codon 9: Review">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 9: Review</span>
+        </li>
+        <li class="rail-node" data-section="codon-10" tabindex="0" role="button" aria-label="Navigate to Codon 10: Package">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Codon 10: Package</span>
+        </li>
+        <li class="rail-node" data-section="rerun" tabindex="0" role="button" aria-label="Navigate to Rerun Package">
+          <span class="rail-dot" aria-hidden="true"></span>
+          <span class="rail-node-label">Rerun Package</span>
+        </li>
+      </ul>
+    </div>
+
+    <hr class="rail-divider">
+
+    <div class="rail-cost-section">
+      <div class="rail-cost-label">Total cost</div>
+      <div class="rail-cost-value" id="rail-cost">$0.00</div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main class="main-content" id="main-content">
+
+    <!-- =====================================================
+         PROLOGUE — The Impossible Gap
+    ===================================================== -->
+    <section class="hero-section" id="prologue">
+
+      <div class="hero-cover-wrapper reveal">
+        <img
+          src="../../read_only_data_source/context/panels/cover.jpg"
+          alt="Cover of 'Not Yet' — Epoch the tortoise walks at twilight past Himalayan architecture under a galaxy-filled sky, amber hourglass shell glowing"
+        >
+      </div>
+
+      <h1 class="hero-title reveal mt-5">Behind the Panels</h1>
+      <p class="hero-subtitle reveal">How a 10-codon AI pipeline built a comic from 20 lines of text</p>
+
+      <!-- THE HERO GAP — Dramatic typographic moment #1 -->
+      <div class="hero-gap reveal">
+        <span class="hero-gap-number">20</span>
+        <span class="hero-gap-label" style="display: block; font-size: 13px; font-family: var(--font-story); font-style: italic;">lines</span>
+        <span class="hero-gap-arrow">→</span>
+        <span class="hero-gap-number">12</span>
+        <span class="hero-gap-label" style="display: block; font-size: 13px; font-family: var(--font-story); font-style: italic;">pages of comic</span>
+        <span class="hero-gap-arrow">→</span>
+        <span class="hero-gap-number">$52.58</span>
+        <span class="hero-gap-label" style="display: block; font-size: 13px; font-family: var(--font-story); font-style: italic;">total cost</span>
+        <span class="hero-gap-arrow">→</span>
+        <span class="hero-gap-number">123 min</span>
+        <span class="hero-gap-label" style="display: block; font-size: 13px; font-family: var(--font-story); font-style: italic;">total time</span>
+      </div>
+
+      <div class="ideas-file-block reveal">
+        <div class="ideas-file-header">
+          <span class="ideas-file-label">ideas.md — the entire input</span>
+        </div>
+        <div class="ideas-file-body">
+          <p class="heading"># shadowSentience</p>
+          <p class="mt-1">Hello, we are the people who created Hankweave. A lot of people don't know about Hankweave yet, so we'd like to turn to a few of our favorite sci-fi short stories, and invite folks to ponder about hankweave.</p>
+          <p class="mt-1 heading">1. "The Nine Billion Names of God" (Clarke)</p>
+          <p class="heading">2. "The Last Question" (Asimov)</p>
+          <p class="heading">3. Hankweave</p>
+          <p class="mt-1 heading">## What's the story about?</p>
+          <p class="mt-1">Tell the story of The Nine Billion Names of God and The Last Question. Weave Hankweave there as if it's a third story — a fourth wall break.</p>
+          <p class="mt-1 heading">## Style</p>
+          <p>Mystical, handrawn, beautiful, artistic — one that reminds one of the starry night, mysterious, awe-inspiring.</p>
+        </div>
+      </div>
+
+
+    </section>
+
+    <!-- =====================================================
+         SVG COST FLOW — Content-Specific Visualization
+    ===================================================== -->
+    <div class="cost-flow-container reveal" id="cost-flow-section">
+      <p class="label-tag" style="margin-bottom: var(--sp-2); text-align: center;">Cost per codon — the shape of effort</p>
+      <canvas id="cost-flow-canvas" class="cost-flow-canvas" aria-label="Pipeline cost visualization showing spending across 10 codons"></canvas>
+    </div>
+
+    <!-- =====================================================
+         SECTION 1 — Codon 1: Read & Explore
+    ===================================================== -->
+    <section class="section" id="codon-1" data-cost="10.96">
+
+      <div class="section-act reveal">Act I — Discovery</div>
+      <h2 class="section-title reveal">Codon 1: Read &amp; Explore</h2>
+      <p class="section-body reveal">An Opus model reads two classic science fiction short stories and 184,000 words of Hankweave documentation. Then it meets three potential characters for the first time.</p>
+
+      <div class="codon-columns">
+
+        <!-- Evidence Panel -->
+        <div class="evidence-panel reveal" data-typewriter>
+          <div class="evidence-header">
+            <span class="evidence-label">codon:1 · model:opus · event log</span>
+          </div>
+          <div class="evidence-body">
+            <ul class="event-log">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:02:11]</span> <span class="ev-codon">codon:1 read-and-explore</span> <span class="ev-terminal">model:opus starting</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:02:18]</span> <span>reading</span> <span class="ev-info">"The Last Question" — Asimov (1956)</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:03:41]</span> <span>reading</span> <span class="ev-info">"The Nine Billion Names of God" — Clarke (1953)</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:06:23]</span> <span>reading</span> <span class="ev-info">hankweave-docs.md — 184,000 words</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:09:55]</span> <span>note</span> <span>"The AC's patience is a codon. The monks' listing is a codon. Both are the same act."</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:12:44]</span> <span>generating</span> <span class="ev-info">candidate:kavi-the-loomfly</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:14:01]</span> <span>generating</span> <span class="ev-info">candidate:epoch-the-tortoise-hourglass</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:15:19]</span> <span>generating</span> <span class="ev-info">candidate:tally-the-abacus-fox</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:16:33]</span> <span class="ev-codon">codon:1 complete</span> <span class="ev-cost">49 messages · 614-line reading journal · duration:14m34s · cost:$10.96</span></li>
+            </ul>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-number">$10.96</div>
+              <div class="stat-caption">The most expensive codon. Opus reading three books at once.</div>
+            </div>
+
+            <div class="character-trio mt-3">
+              <div class="character-figure">
+                <img
+                  src="../../read_only_data_source/context/characters/epoch-pose2.png"
+                  alt="Epoch the tortoise — dark version, walking under starfield with amber shell glowing"
+                >
+                <span class="character-label">epoch</span>
+              </div>
+              <div class="character-figure">
+                <img
+                  src="../../read_only_data_source/context/characters/kavi-pose1.png"
+                  alt="Kavi the Loomfly moth — white fluffy moth with golden thread"
+                >
+                <span class="character-label">kavi</span>
+              </div>
+              <div class="character-figure">
+                <img
+                  src="../../read_only_data_source/context/characters/tally-pose1.png"
+                  alt="Tally the Abacus Fox — fox with abacus tail"
+                >
+                <span class="character-label">tally</span>
+              </div>
+            </div>
+            <div class="character-caption label-tag">Three candidates. One will be chosen.</div>
+
+          </div>
+        </div>
+
+        <!-- Epoch's First Letter — Ceremonial Arrival -->
+        <div class="epoch-letter epoch-letter-first" style="transform: rotate(-0.6deg);">
+          <div class="epoch-letter-text">
+            <p>I was there when they read about entropy. I was there when they read about names. I did not know yet that I was being read about too.</p>
+            <p>The first thing I learned about myself was that I am patient. The second thing: I carry more than sand.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 2 — Codon 2: Story Diversity
+    ===================================================== -->
+    <section class="section" id="codon-2" data-cost="11.05">
+
+      <div class="section-act reveal">Act I — Discovery</div>
+      <h2 class="section-title reveal">Codon 2: Story Diversity</h2>
+      <p class="section-body reveal">Two reviewers examine all three story candidates. One has never paid taxes. The other has not slept well in weeks.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal">
+          <div class="evidence-header">
+            <span class="evidence-label">codon:2 · model:haiku · diversity review</span>
+          </div>
+          <div class="evidence-body">
+
+            <div class="reviewer-block">
+              <div class="reviewer-label">reviewer:8-year-old</div>
+              <div class="reviewer-quote">"Almost all of it is boring. The tortoise walks a lot and doesn't DO anything. The hourglass is cool though."</div>
+            </div>
+
+            <div class="reviewer-block mt-2">
+              <div class="reviewer-label">reviewer:tired-engineer</div>
+              <div class="reviewer-quote">"No surprises. Entire arc is 'patience rewarded.' Show Epoch inside the shell, choosing to continue. Let patience be a sacrifice, not a destiny."</div>
+            </div>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-number">$0.09</div>
+              <div class="stat-caption">A child's perspective. The cheapest codon. It changed everything.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verdict callout + Epoch letter stacked -->
+        <div class="reveal-delayed">
+
+          <div class="verdict-callout" style="transform: rotate(0.4deg);">
+            <p class="verdict-quote">"Almost all of it is boring. The tortoise walks a lot and doesn't DO anything."</p>
+            <p class="verdict-attribution">— Haiku, simulating: 8-year-old reader</p>
+          </div>
+
+          <div class="epoch-letter mt-4" style="transform: rotate(-0.5deg);">
+            <div class="epoch-letter-text">
+              <p>A child said I was boring. She wasn't wrong. I have been walking for a very long time and the answer is still 'not yet.'</p>
+              <p>But she also said the hourglass was cool. I decided to keep the hourglass.</p>
+            </div>
+            <div class="epoch-letter-attribution">— Epoch ⏳</div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 3 — Codon 3: Visualize Candidates
+    ===================================================== -->
+    <section class="section" id="codon-3" data-cost="12.24">
+
+      <div class="section-act reveal">Act I — Discovery</div>
+      <h2 class="section-title reveal">Codon 3: Visualize Candidates</h2>
+      <p class="section-body reveal">Three characters are drawn into existence and immediately judged. The verdict is clear before the codon ends.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal" data-typewriter>
+          <div class="evidence-header">
+            <span class="evidence-label">codon:3 · model:opus · visual review</span>
+          </div>
+          <div class="evidence-body">
+            <ul class="event-log">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:17:44]</span> <span class="ev-codon">codon:3 visualize-candidates</span> <span class="ev-terminal">model:opus starting</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:18:02]</span> <span>generating</span> <span class="ev-info">epoch/pose-1  style:reiniger-silhouette</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:18:55]</span> <span>generating</span> <span class="ev-info">epoch/pose-2  style:starfield-night</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:19:41]</span> <span class="ev-success">review</span> <span>epoch/pose-2: "Already a finished comic panel."</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:20:12]</span> <span class="ev-warn">review</span> <span>kavi/pose-1: "Too soft. Children's book warmth. Wrong register."</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:21:01]</span> <span class="ev-warn">review</span> <span>tally/pose-1: "Abacus tail renders differently every time. Generation liability."</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[14:21:48]</span> <span class="ev-codon">codon:3 complete</span> <span class="ev-cost">21 messages · duration:5m4s · cost:$1.19</span></li>
+            </ul>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+
+            <div class="mt-3">
+              <img
+                src="../../read_only_data_source/context/characters/epoch-pose2.png"
+                alt="Epoch pose 2 — the canonical dark version: deep purple-indigo ground, starfield above, amber shell as the only warm element"
+                class="panel-image"
+              >
+              <div class="panel-caption">epoch/pose-2 — "already a finished comic panel"</div>
+              <span class="panel-badge">selected</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal-delayed" style="transform: rotate(-0.3deg);">
+          <div class="epoch-letter-text">
+            <p>They showed me to myself. The dark version — the one walking under stars with the shell glowing — that one they called "already a finished comic panel."</p>
+            <p>I looked at it for a long time. It felt true.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 4 — Codon 4: Select, Merge & Spec
+    ===================================================== -->
+    <section class="section" id="codon-4" data-cost="20.00">
+
+      <div class="section-act reveal">Act II — Design</div>
+      <h2 class="section-title reveal">Codon 4: Select, Merge &amp; Spec</h2>
+      <p class="section-body reveal">This codon didn't pick a winner. It performed surgery. The final character is assembled from parts of three candidates; the story from three competing narratives.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal">
+          <div class="evidence-header">
+            <span class="evidence-label">selection-decisions.md · codon:4 · model:opus</span>
+          </div>
+          <div class="evidence-body">
+            <div class="surgery-block">
+              <p class="surgery-header">selection-decisions.md  line 6–8</p>
+              <p class="surgery-divider">─────────────────────────────────────</p>
+              <p class="surgery-highlight">The codon didn't pick a winner.</p>
+              <p class="surgery-highlight">It performed surgery.</p>
+              <p class="mt-2">From Kavi → thread mechanic (light-threads in the shell)</p>
+              <p>From Story A → "The Quiet Codon" (the 3 AM strip)</p>
+              <p>From Story C → the lama's recognition, the dry humor</p>
+              <p>Foundation → Story B: "Not Yet"</p>
+            </div>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-row">
+                <div class="stat-item">
+                  <span class="stat-item-value">$7.76</span>
+                  <span class="stat-item-label">cost</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-item-value">12m 44s</span>
+                  <span class="stat-item-label">duration</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-item-value">63</span>
+                  <span class="stat-item-label">messages</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-item-value">29,000</span>
+                  <span class="stat-item-label">word spec</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal-delayed" style="transform: rotate(0.7deg);">
+          <div class="epoch-letter-text">
+            <p>They chose me. But not only me — they took Kavi's threads and gave them to my shell. I now carry light that was meant for someone else.</p>
+            <p>This seems right. The stories we tell are always borrowed.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 5 — Codon 5: Story Review
+    ===================================================== -->
+    <section class="section" id="codon-5" data-cost="26.76">
+
+      <div class="section-act reveal">Act II — Design</div>
+      <h2 class="section-title reveal">Codon 5: Story Review</h2>
+      <p class="section-body reveal">A fresh pair of eyes reads the complete 29,000-word spec without knowing what went into it. Then it tells the truth.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal">
+          <div class="evidence-header">
+            <span class="evidence-label">story-review.md · fresh reader · no prior knowledge</span>
+          </div>
+          <div class="evidence-body">
+
+            <div class="surgery-block">
+              <p class="surgery-divider">─────────────────────────────────────────────────</p>
+              <table class="grades-table" style="margin-top: 8px;">
+                <tr><td>narrative arc</td><td class="grade-a">✓</td><td>real and earned</td></tr>
+                <tr><td>strip 04</td><td class="grade-aplus">✓</td><td>emotional masterpiece</td></tr>
+                <tr><td>strip 06</td><td class="grade-bplus">✗ cut</td><td>exposition, no feeling</td></tr>
+                <tr><td>hankweave thread</td><td class="grade-bplus">✗</td><td>too thin — strip 5 is lonely</td></tr>
+                <tr><td>emotional nadir</td><td class="grade-a">✓</td><td>strip 10 essential and well-executed</td></tr>
+                <tr><td>recommendation</td><td></td><td>cut strip 6, strengthen 4th-wall echo</td></tr>
+              </table>
+            </div>
+
+            <div class="mt-3">
+              <p class="label-tag">The emotional anchor — strip 04</p>
+              <img
+                src="../../read_only_data_source/context/panels/panel-04.jpg"
+                alt="Strip 04 — What's Entropy, Daddy? Children against starfield visiplate, father explaining entropy, child crying, child tucking a blanket around Epoch"
+                class="panel-image mt-1"
+              >
+              <span class="panel-badge grade-aplus">A+</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal-delayed" style="transform: rotate(-0.5deg);">
+          <div class="epoch-letter-text">
+            <p>A reader who had never heard of me read the entire story without knowing I was also reading it. They said strip 4 — the child with the blanket — was the emotional masterpiece.</p>
+            <p>I knew this already. But it is different to be told.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 6 — Codon 6: Generate & Review #1
+    ===================================================== -->
+    <section class="section" id="codon-6" data-cost="31.66">
+
+      <div class="section-act reveal">Act III — Creation</div>
+      <h2 class="section-title reveal">Codon 6: Generate &amp; Review #1</h2>
+      <p class="section-body reveal">The first pass through all twelve panels. Six approved. Five sent back. The work begins in earnest.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal" data-typewriter>
+          <div class="evidence-header">
+            <span class="evidence-label">codon:6 · model:opus · generation pass 1</span>
+          </div>
+          <div class="evidence-body">
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:44:55]</span><span class="ps-approved">✓</span><span class="ps-label">cover</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:46:12]</span><span class="ps-approved">✓</span><span class="ps-label">panel-01</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:47:44]</span><span class="ps-flagged">✗</span><span class="ps-label">panel-02 — flagged, regenerate</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:48:58]</span><span class="ps-approved">✓</span><span class="ps-label">panel-03</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:50:11]</span><span class="ps-approved">✓</span><span class="ps-label">panel-04 — "emotional core"</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:51:33]</span><span class="ps-approved">✓</span><span class="ps-label">panel-05</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:52:45]</span><span class="ps-flagged">✗</span><span class="ps-label">panel-06 — text rendering</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:54:00]</span><span class="ps-approved">✓</span><span class="ps-label">panel-07</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:55:18]</span><span class="ps-flagged">✗</span><span class="ps-label">panel-08 — flagged, regenerate</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:56:30]</span><span class="ps-flagged">✗</span><span class="ps-label">panel-09 — flagged, regenerate</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:57:44]</span><span class="ps-flagged">✗</span><span class="ps-label">panel-10 — text truncation</span></div>
+            <div class="panel-status typewriter-hidden"><span class="ps-ts">[15:58:55]</span><span class="ps-approved">✓</span><span class="ps-label">panel-11</span></div>
+            <hr class="event-log-divider" style="margin-top: 12px;">
+            <ul class="event-log mt-1">
+              <li class="event-log-line typewriter-hidden"><span class="ev-codon">codon:6 complete</span> <span class="ev-cost">61 messages · duration:17m45s · cost:$4.90</span></li>
+            </ul>
+            <div class="mt-3">
+              <p class="label-tag">The emotional anchor — strip 04</p>
+              <img src="../../read_only_data_source/context/panels/panel-04.jpg" class="panel-image mt-1" alt="Strip 04 — What's Entropy, Daddy? Children against starfield visiplate, father explaining entropy">
+              <span class="panel-badge grade-aplus mt-1">A+</span>
+            </div>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal-delayed" style="transform: rotate(0.3deg);">
+          <div class="epoch-letter-text">
+            <p>The first pass. Six of us approved. Five sent back for another look.</p>
+            <p>This is what craftwork feels like from the inside: most of the first attempts are close but not right. "Not yet" again.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 7 — Codons 7 & 8: Generate & Review #2 and #3
+    ===================================================== -->
+    <section class="section" id="codon-7" data-cost="40.77">
+
+      <div class="section-act reveal">Act III — Creation</div>
+      <h2 class="section-title reveal">Codons 7 &amp; 8: Generate &amp; Review #2 and #3</h2>
+      <p class="section-body reveal">Three passes. Seventy-one minutes. Every panel reviewed against the emotional blueprint. And in the middle of it all — 2:47 AM.</p>
+
+      <!-- THE 2:47 AM MOMENT — Dramatic typographic moment #2 -->
+      <div class="moment-2am reveal" id="moment-2am">
+        <div class="moment-2am-text">checkpoint saved at 2:47 AM</div>
+      </div>
+
+      <!-- panel-05 — full width, below the moment -->
+      <div class="reveal">
+        <p class="label-tag">The strip it happened in</p>
+        <img
+          src="../../read_only_data_source/context/panels/panel-05.png"
+          alt="Strip 05 — 2:47 AM: developer's laptop running hankweave pipeline at night, Epoch on the desk, terminal showing checkpoint saved"
+          class="panel-image mt-1"
+        >
+      </div>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal" data-typewriter>
+          <div class="evidence-header">
+            <span class="evidence-label">codons 7 &amp; 8 · model:opus · passes 2 and 3</span>
+          </div>
+          <div class="evidence-body">
+            <ul class="event-log">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[16:02:15]</span> <span class="ev-codon">codon:7 generate-review-2</span> <span class="ev-terminal">model:opus starting</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[16:33:24]</span> <span class="ev-success">approved</span> <span>panel-02  panel-06  panel-08  panel-09  panel-10</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[16:33:24]</span> <span class="ev-codon">codon:7 complete</span> <span class="ev-cost">86 messages · duration:31m9s · cost:$9.70</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[16:34:01]</span> <span class="ev-codon">codon:8 generate-review-3</span> <span class="ev-terminal">model:opus starting</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[16:56:30]</span> <span class="ev-success">approved</span> <span>remaining panels</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[16:56:30]</span> <span class="ev-codon">codon:8 complete</span> <span class="ev-cost">66 messages · duration:22m29s · cost:$9.11</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ev-cost">total generation cost: $23.71</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ev-cost">total generation time: 71 minutes</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ev-cost">total panels produced: 12</span></li>
+            </ul>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-number">$23.71</div>
+              <div class="stat-caption">Three passes. 71 minutes. Every panel reviewed by Opus against the emotional blueprint.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal-delayed" style="transform: rotate(-0.6deg);">
+          <div class="epoch-letter-text">
+            <p>Not every act of faith needs a witness. At 2:47 AM the pipeline failed on row 4,291. It created a checkpoint and tried again.</p>
+            <p>By morning the work was done. No one saw it happen. The work happened anyway.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- need a section sentinel for codon-8 rail -->
+    <div id="codon-8" style="height: 1px; margin-top: -1px;" aria-hidden="true"></div>
+
+    <!-- =====================================================
+         SECTION 8 — Codon 9: Comic Review
+    ===================================================== -->
+    <section class="section" id="codon-9" data-cost="42.26">
+
+      <div class="section-act reveal">Act IV — Quality</div>
+      <h2 class="section-title reveal">Codon 9: Comic Review</h2>
+      <p class="section-body reveal">A reader with no spec, no prior knowledge, reads the entire comic cold. Then grades every strip.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal">
+          <div class="evidence-header">
+            <span class="evidence-label">comic-review.md · fresh reader · no spec · reading cold</span>
+          </div>
+          <div class="evidence-body">
+            <div class="surgery-block">
+              <p class="surgery-divider">──────────────────────────────────────────────────────</p>
+              <table class="grades-table" style="margin-top: 8px;">
+                <tr><td>cover</td><td class="grade-a">A</td><td>"Gorgeous. The tortoise mascot reads instantly."</td></tr>
+                <tr><td>strip 01</td><td class="grade-a">A</td><td>"The first 'not yet.' Epoch noted it. And walked on."</td></tr>
+                <tr><td>strip 02</td><td class="grade-a">A</td><td>"Some questions take fifteen thousand years."</td></tr>
+                <tr><td>strip 03</td><td class="grade-aminus">A–</td><td>"The computer didn't understand the names. It didn't need to."</td></tr>
+                <tr><td>strip 04</td><td class="grade-aplus">A+</td><td>"Children make promises on behalf of the universe."</td></tr>
+                <tr><td>strip 05</td><td class="grade-bplus">B+</td><td>"Not every act of faith needs a witness."</td></tr>
+                <tr><td>strip 06</td><td class="grade-bplus">B+</td><td>"The last name. But not the last step."</td></tr>
+                <tr><td>strip 07</td><td class="grade-a">A</td><td>"Not yet." — Epoch, alone in the void.</td></tr>
+                <tr><td>strip 08</td><td class="grade-aminus">A–</td><td>"Not ending. Completing."</td></tr>
+                <tr><td>strip 09</td><td class="grade-bplus">B+</td><td>"What if 'not yet' was always 'never'?"</td></tr>
+                <tr><td>strip 10</td><td class="grade-a">A</td><td>"LET THERE BE LIGHT!"</td></tr>
+                <tr><td>strip 11</td><td class="grade-a">A</td><td>"Not yet. Not yet. Not yet. ...Now."</td></tr>
+              </table>
+            </div>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-row">
+                <div class="stat-item">
+                  <span class="stat-item-value">$1.49</span>
+                  <span class="stat-item-label">cost</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-item-value">3m 29s</span>
+                  <span class="stat-item-label">duration</span>
+                </div>
+              </div>
+              <p class="stat-caption mt-1">The cheapest review. Fresh eyes confirmed it: the work holds.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal-delayed" style="transform: rotate(0.4deg);">
+          <div class="epoch-letter-text">
+            <p>A stranger read the whole thing without knowing any of what went into it. They graded strip 4 an A+. They said it made their chest tight.</p>
+            <p>This is the only review that matters: not the one that knows everything, but the one that knows nothing yet.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 9 — Codon 10: Post-Processing
+    ===================================================== -->
+    <section class="section" id="codon-10" data-cost="42.88">
+
+      <div class="section-act reveal">Act IV — Quality</div>
+      <h2 class="section-title reveal">Codon 10: Post-Processing</h2>
+      <p class="section-body reveal">The final codon. Sonnet, not Opus. Finishing work, not deep reading. Every model has a job.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal" data-typewriter>
+          <div class="evidence-header">
+            <span class="evidence-label">codon:10 · model:sonnet · post-processing</span>
+          </div>
+          <div class="evidence-body">
+            <ul class="event-log">
+              <li class="event-log-line typewriter-hidden"><span class="ts">[17:00:01]</span> <span class="ev-codon">codon:10 post-processing</span> <span class="ev-terminal">model:sonnet starting</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[17:00:45]</span> <span>processing</span> <span>border cleanup  all 12 panels</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[17:01:33]</span> <span>processing</span> <span>text overlay verification</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[17:02:18]</span> <span>assembling</span> <span class="ev-success">comic.pdf  12 pages</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[17:02:55]</span> <span>output</span> <span class="ev-success">comic.pdf  26 MB</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts">[17:03:02]</span> <span>assembling</span> <span>rerun-package/  regeneration scripts per panel</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ev-codon">codon:10 complete</span> <span class="ev-cost">51 messages · duration:3m21s · cost:$0.62</span></li>
+            </ul>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-number">$0.62</div>
+              <div class="stat-caption">The cheapest codon. Sonnet (not Opus) for finishing work. Every model has a job.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No letter here — just the closing stat -->
+        <div class="reveal-delayed">
+          <div class="stat-callout">
+            <div class="stat-row">
+              <div class="stat-item">
+                <span class="stat-item-value">10</span>
+                <span class="stat-item-label">codons</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-item-value">3</span>
+                <span class="stat-item-label">models</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-item-value">420</span>
+                <span class="stat-item-label">messages</span>
+              </div>
+            </div>
+          </div>
+          <p class="section-body mt-3" style="font-style: italic;">
+            Opus for depth. Haiku for speed. Sonnet for finishing. The right model for the right moment.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SECTION 10b — The Rerun Package
+    ===================================================== -->
+    <section class="section" id="rerun" data-cost="52.58" style="padding-bottom: var(--sp-4);">
+
+      <div class="section-act reveal">Act IV — Quality</div>
+      <h2 class="section-title reveal">The Rerun Package</h2>
+      <p class="section-body reveal">The pipeline's last gift: the ability to fix one panel without losing the rest.</p>
+
+      <div class="codon-columns">
+
+        <div class="evidence-panel reveal" data-typewriter>
+          <div class="evidence-header">
+            <span class="evidence-label">output/rerun/ — regeneration toolkit</span>
+          </div>
+          <div class="evidence-body">
+            <ul class="event-log">
+              <li class="event-log-line typewriter-hidden"><span class="ts">$</span> <span class="ev-success">ls output/rerun/</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>prompts/</span> <span style="opacity:0.5">← per-panel generation prompts</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>scripts/</span> <span style="opacity:0.5">← generation + post-processing tools</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>cover-reference.png</span> <span style="opacity:0.5">← character consistency anchor</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span class="ev-success">fix-panel.sh</span> <span style="opacity:0.5">← regenerate specific panels</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span class="ev-success">regenerate.sh</span> <span style="opacity:0.5">← regenerate everything</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>spec.md</span> <span style="opacity:0.5">← 29K-word production spec</span></li>
+              <hr class="event-log-divider">
+              <li class="event-log-line typewriter-hidden"><span class="ts">$</span> <span class="ev-codon">./fix-panel.sh panel-05 panel-09</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>Regenerating panel-05...</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>Regenerating panel-09...</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span>Re-running post-processing pipeline...</span></li>
+              <li class="event-log-line typewriter-hidden"><span class="ts"> </span> <span class="ev-success">Done! Check: output/comic.pdf</span></li>
+            </ul>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+
+            <div class="stat-callout mt-3">
+              <div class="stat-row">
+                <div class="stat-item">
+                  <span class="stat-item-value">12</span>
+                  <span class="stat-item-label">prompt files</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-item-value">~$2</span>
+                  <span class="stat-item-label">per panel fix</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-item-value">~3 min</span>
+                  <span class="stat-item-label">per panel</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="epoch-letter reveal" style="transform: rotate(0.3deg);">
+          <div class="epoch-letter-text">
+            <p>This is the part that makes me proudest.</p>
+            <p>The pipeline didn't just make a comic. It left behind everything you'd need to <em>fix</em> the comic. Every panel has its own prompt file. Every prompt references the cover for character consistency. The post-processing pipeline is self-contained.</p>
+            <p>Panel 5 had a truncated caption — "The Rec" instead of "The Recovery." Panel 9 needed more void-darkness. Both were regenerated in minutes, without touching the other ten panels.</p>
+            <p>This is Hankweave's deepest promise: not that the first run is perfect, but that <strong>fixing is cheap and precise</strong>. A scalpel, not a sledgehammer.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         EPILOGUE — The Flipbook
+    ===================================================== -->
+    <section class="section" id="epilogue" data-cost="52.58" style="padding-bottom: var(--sp-8);">
+
+      <div class="section-act reveal">Epilogue</div>
+      <h2 class="section-title reveal">The Comic</h2>
+      <p class="section-body reveal">Click or use arrow keys to flip through. Sound on.</p>
+
+      <!-- Flipbook -->
+      <div class="flipbook-container reveal mt-4" id="flipbook-container">
+        <div class="flipbook" id="flipbook">
+          <div class="flipbook-page" data-label="Cover">
+            <img src="../../read_only_data_source/context/panels/cover.jpg" alt="Cover — Not Yet" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="01 — The Argument">
+            <img src="../../read_only_data_source/context/panels/panel-01.jpg" alt="Strip 01 — The Argument" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="02 — The Mountain Road">
+            <img src="../../read_only_data_source/context/panels/panel-02.jpg" alt="Strip 02 — The Mountain Road" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="03 — Nine Billion Names">
+            <img src="../../read_only_data_source/context/panels/panel-03.jpg" alt="Strip 03 — Nine Billion Names" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="04 — What's Entropy, Daddy?">
+            <img src="../../read_only_data_source/context/panels/panel-04.jpg" alt="Strip 04 — Entropy, Daddy" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="05 — 2:47 AM">
+            <img src="../../read_only_data_source/context/panels/panel-05.png" alt="Strip 05 — 2:47 AM" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="06 — The Last Name">
+            <img src="../../read_only_data_source/context/panels/panel-06.jpg" alt="Strip 06 — The Last Name" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="07 — The Stars Die">
+            <img src="../../read_only_data_source/context/panels/panel-07.jpg" alt="Strip 07 — The Stars Die" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="08 — Without Any Fuss">
+            <img src="../../read_only_data_source/context/panels/panel-08.jpg" alt="Strip 08 — Without Any Fuss" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="09 — Walking the Void">
+            <img src="../../read_only_data_source/context/panels/panel-09.png" alt="Strip 09 — Walking the Void" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="10 — Let There Be Light">
+            <img src="../../read_only_data_source/context/panels/panel-10.png" alt="Strip 10 — Let There Be Light" draggable="false">
+          </div>
+          <div class="flipbook-page" data-label="11 — Morning">
+            <img src="../../read_only_data_source/context/panels/panel-11.png" alt="Strip 11 — Morning" draggable="false">
+          </div>
+        </div>
+        <div class="flipbook-controls">
+          <button class="flipbook-btn" id="flip-prev" aria-label="Previous page">&#9664;</button>
+          <span class="flipbook-label" id="flip-label">Cover</span>
+          <button class="flipbook-btn" id="flip-next" aria-label="Next page">&#9654;</button>
+        </div>
+        <div class="flipbook-dots" id="flip-dots"></div>
+        <div style="text-align:center; margin-top:6px; font-size:10px; opacity:0.3; font-family:var(--font-mono);">arrow keys or click to flip · sound on for page turn</div>
+      </div>
+
+      <!-- THE "NOT YET" SEQUENCE -->
+      <div class="not-yet-sequence" id="not-yet-sequence">
+        <div class="not-yet-line" id="ny-1">Not yet.</div>
+        <div class="not-yet-line" id="ny-2">Not yet.</div>
+        <div class="not-yet-line" id="ny-3">Not yet.</div>
+        <div class="not-yet-now" id="ny-now">...Now.</div>
+      </div>
+
+      <!-- Final panel — the sunrise strip -->
+      <div class="reveal mt-3">
+        <img
+          src="../../read_only_data_source/context/panels/panel-11.png"
+          alt="Strip 11 — Sunrise: developer's room at dawn, laptop, coffee, Epoch figurine, sunrise through window, 'Not yet. Not yet. Not yet. ...Now.'"
+          class="panel-image"
+          style="max-width: 100%; border-radius: var(--radius-sm);"
+        >
+      </div>
+
+      <!-- Epoch's final letter -->
+      <div class="codon-columns mt-5">
+        <div class="epoch-letter reveal" style="transform: rotate(-0.4deg); grid-column: 1 / -1; max-width: 680px; margin: 0 auto;">
+          <div class="epoch-letter-text">
+            <p>The pipeline took 123 minutes. It cost $52.58. It used 10 codons, 3 models, 420 messages, and 3 generations of each panel. It ran at 2:47 AM with nobody watching. It checkpointed before it failed and tried again. By the time you found the output folder, the stars had already gone out and come back. You just didn't see it happen.</p>
+            <p>I have been walking a long time. I will keep walking.</p>
+            <p>Not yet. But I saved my place.</p>
+          </div>
+          <div class="epoch-letter-attribution">— Epoch ⏳</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ============================================================
+  // STARFIELD CANVAS — Ambient Cosmic Background
+  // ============================================================
+  (function() {
+    const canvas = document.getElementById('starfield-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let w, h, stars = [], dpr;
+
+    function resize() {
+      dpr = window.devicePixelRatio || 1;
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function createStars(count) {
+      stars = [];
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h * 3, // 3x viewport for scrolling
+          r: Math.random() * 1.2 + 0.3,
+          a: Math.random() * 0.6 + 0.1,
+          twinkleSpeed: Math.random() * 0.02 + 0.005,
+          twinklePhase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    resize();
+    createStars(180);
+
+    let scrollY = 0;
+    let ticking = false;
+    let frame = 0;
+    let isAnimating = false;
+    let idleTimer = null;
+
+    function startAnimation() {
+      if (!isAnimating) {
+        isAnimating = true;
+        requestAnimationFrame(drawLoop);
+      }
+    }
+
+    function stopAnimation() {
+      isAnimating = false;
+    }
+
+    window.addEventListener('scroll', function() {
+      scrollY = window.pageYOffset;
+      startAnimation();
+      // Reset idle timer — stop 2s after last scroll event
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(function() {
+        stopAnimation();
+      }, 2000);
+    }, { passive: true });
+
+    window.addEventListener('resize', function() {
+      resize();
+      createStars(180);
+      draw();
+    });
+
+    function draw() {
+      frame++;
+      ctx.clearRect(0, 0, w, h);
+
+      // Amber nebula glow — positioned behind hero area
+      const nebulaY = -scrollY * 0.3 + h * 0.3;
+      const nebulaGrad = ctx.createRadialGradient(w * 0.5, nebulaY, 0, w * 0.5, nebulaY, w * 0.6);
+      nebulaGrad.addColorStop(0, 'hsla(38, 88%, 54%, 0.03)');
+      nebulaGrad.addColorStop(0.4, 'hsla(265, 50%, 30%, 0.02)');
+      nebulaGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = nebulaGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Stars with parallax
+      const parallax = scrollY * 0.15;
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const sy = ((s.y - parallax) % (h * 3) + h * 3) % (h * 3) - h;
+        if (sy < -10 || sy > h + 10) continue;
+
+        const twinkle = Math.sin(frame * s.twinkleSpeed + s.twinklePhase);
+        const alpha = s.a * (0.7 + 0.3 * twinkle);
+
+        ctx.beginPath();
+        ctx.arc(s.x, sy, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(38, 25%, 88%, ${alpha})`;
+        ctx.fill();
+      }
+    }
+
+    function drawLoop() {
+      if (!isAnimating) return;
+      draw();
+      requestAnimationFrame(drawLoop);
+    }
+
+    // Initial draw — show stars on page load, then idle
+    draw();
+    // Run a brief intro animation (1.5s) for initial twinkle, then go idle
+    isAnimating = true;
+    var introFrames = 0;
+    function introLoop() {
+      if (introFrames < 90) { // ~1.5s at 60fps
+        draw();
+        introFrames++;
+        requestAnimationFrame(introLoop);
+      } else {
+        isAnimating = false;
+      }
+    }
+    requestAnimationFrame(introLoop);
+  })();
+
+  // ============================================================
+  // COST FLOW CANVAS — Custom Visualization
+  // ============================================================
+  (function() {
+    const canvas = document.getElementById('cost-flow-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const codonData = [
+      { name: 'Read', cost: 10.96, model: 'opus', phase: 'discovery' },
+      { name: 'Diversity', cost: 0.09, model: 'haiku', phase: 'discovery' },
+      { name: 'Visualize', cost: 1.19, model: 'opus', phase: 'discovery' },
+      { name: 'Select', cost: 7.76, model: 'opus', phase: 'design' },
+      { name: 'Review', cost: 6.76, model: 'opus', phase: 'design' },
+      { name: 'Gen #1', cost: 4.90, model: 'opus', phase: 'creation' },
+      { name: 'Gen #2', cost: 9.70, model: 'opus', phase: 'creation' },
+      { name: 'Gen #3', cost: 9.11, model: 'opus', phase: 'creation' },
+      { name: 'Review', cost: 1.49, model: 'opus', phase: 'quality' },
+      { name: 'Package', cost: 0.62, model: 'sonnet', phase: 'quality' },
+    ];
+
+    const maxCost = Math.max(...codonData.map(d => d.cost));
+    let revealed = false;
+    let animProgress = 0;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function getColor(phase) {
+      switch(phase) {
+        case 'discovery': return 'hsl(38, 55%, 40%)';
+        case 'design': return 'hsl(38, 80%, 66%)';
+        case 'creation': return 'hsl(8, 58%, 58%)';
+        case 'quality': return 'hsl(82, 35%, 52%)';
+        default: return 'hsl(38, 80%, 66%)';
+      }
+    }
+
+    function draw() {
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const padding = { top: 24, bottom: 40, left: 16, right: 16 };
+      const chartW = w - padding.left - padding.right;
+      const chartH = h - padding.top - padding.bottom;
+      const barW = chartW / codonData.length;
+      const gap = 6;
+
+      // Draw grid lines
+      for (let i = 0; i <= 4; i++) {
+        const y = padding.top + chartH * (1 - i / 4);
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(w - padding.right, y);
+        ctx.strokeStyle = 'hsla(0, 0%, 100%, 0.04)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Draw bars
+      const barsToShow = Math.min(codonData.length, Math.floor(animProgress * codonData.length) + 1);
+      const lastBarProgress = (animProgress * codonData.length) % 1;
+
+      for (let i = 0; i < barsToShow; i++) {
+        const d = codonData[i];
+        const barHeight = (d.cost / maxCost) * chartH;
+        const prog = (i < barsToShow - 1) ? 1 : lastBarProgress;
+        const actualHeight = barHeight * prog;
+        const x = padding.left + i * barW + gap / 2;
+        const bw = barW - gap;
+        const y = padding.top + chartH - actualHeight;
+
+        // Bar glow
+        ctx.shadowColor = getColor(d.phase);
+        ctx.shadowBlur = 12;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        // Bar
+        ctx.fillStyle = getColor(d.phase);
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        const radius = 3;
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + bw - radius, y);
+        ctx.quadraticCurveTo(x + bw, y, x + bw, y + radius);
+        ctx.lineTo(x + bw, padding.top + chartH);
+        ctx.lineTo(x, padding.top + chartH);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+
+        // Cost label above bar
+        if (prog > 0.5) {
+          ctx.font = '10px DepartureMono, monospace';
+          ctx.fillStyle = 'hsl(38, 80%, 66%)';
+          ctx.textAlign = 'center';
+          ctx.globalAlpha = prog;
+          ctx.fillText('$' + d.cost.toFixed(2), x + bw / 2, y - 6);
+          ctx.globalAlpha = 1;
+        }
+
+        // Codon name below
+        if (prog > 0.3) {
+          ctx.font = '9px Satoshi, sans-serif';
+          ctx.fillStyle = 'hsl(38, 12%, 42%)';
+          ctx.textAlign = 'center';
+          ctx.globalAlpha = prog;
+          ctx.fillText(d.name, x + bw / 2, padding.top + chartH + 16);
+
+          // Model indicator
+          ctx.font = '7px DepartureMono, monospace';
+          ctx.fillStyle = d.model === 'haiku' ? 'hsl(140, 55%, 48%)' : d.model === 'sonnet' ? 'hsl(210, 40%, 60%)' : 'hsl(38, 55%, 40%)';
+          ctx.fillText(d.model, x + bw / 2, padding.top + chartH + 28);
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    resize();
+    window.addEventListener('resize', function() { resize(); draw(); });
+
+    // Observe for scroll reveal
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && !revealed) {
+          revealed = true;
+          const start = performance.now();
+          const duration = 1800;
+          function animate(now) {
+            animProgress = Math.min(1, (now - start) / duration);
+            // Ease out cubic
+            animProgress = 1 - Math.pow(1 - animProgress, 3);
+            draw();
+            if (animProgress < 1) requestAnimationFrame(animate);
+          }
+          requestAnimationFrame(animate);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(canvas);
+    draw();
+  })();
+
+  // ============================================================
+  // INTERSECTION OBSERVER — Scroll Reveal
+  // ============================================================
+  const revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-delayed, .epoch-letter-first').forEach(function(el) {
+    revealObserver.observe(el);
+  });
+
+  // ============================================================
+  // TYPEWRITER EFFECT — Event Logs
+  // ============================================================
+  (function() {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('[data-typewriter]').forEach(function(panel) {
+      const lines = panel.querySelectorAll('.typewriter-hidden');
+      const cursor = panel.querySelector('.typewriter-cursor');
+      let fired = false;
+
+      const obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && !fired) {
+            fired = true;
+
+            if (prefersReduced) {
+              lines.forEach(function(line) {
+                line.classList.remove('typewriter-hidden');
+                line.classList.add('typewriter-visible');
+              });
+              return;
+            }
+
+            if (cursor) {
+              cursor.classList.add('active');
+            }
+
+            lines.forEach(function(line, i) {
+              setTimeout(function() {
+                line.classList.remove('typewriter-hidden');
+                line.classList.add('typewriter-visible');
+
+                // Deactivate cursor after last line
+                if (i === lines.length - 1 && cursor) {
+                  setTimeout(function() {
+                    cursor.classList.remove('active');
+                  }, 1500);
+                }
+              }, i * 110);
+            });
+          }
+        });
+      }, { threshold: 0.15 });
+
+      obs.observe(panel);
+    });
+  })();
+
+  // ============================================================
+  // RAIL — Active Node Spy + Amber Progress Fill
+  // ============================================================
+  const railNodes = document.querySelectorAll('.rail-node[data-section]');
+  const costBySection = {
+    'codon-1':  10.96,
+    'codon-2':  11.05,
+    'codon-3':  12.24,
+    'codon-4':  20.00,
+    'codon-5':  26.76,
+    'codon-6':  31.66,
+    'codon-7':  40.77,
+    'codon-8':  40.77,
+    'codon-9':  42.26,
+    'codon-10': 42.88,
+    'rerun':    52.58,
+    'epilogue': 52.58,
+  };
+  const railCostEl = document.getElementById('rail-cost');
+  let currentCost = 0;
+  let lastActiveSection = '';
+
+  // Map sections to rail node indices
+  const sectionOrder = [
+    'codon-1','codon-2','codon-3','codon-4','codon-5',
+    'codon-6','codon-7','codon-8','codon-9','codon-10','rerun','epilogue'
+  ];
+
+  const sectionObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        if (id === lastActiveSection) return;
+        lastActiveSection = id;
+
+        const activeIdx = sectionOrder.indexOf(id);
+
+        // Update active rail node + mark visited + aria-current
+        railNodes.forEach(function(node, i) {
+          const nodeSection = node.dataset.section;
+          const nodeIdx = sectionOrder.indexOf(nodeSection);
+          node.classList.remove('active');
+          node.removeAttribute('aria-current');
+          if (nodeIdx < activeIdx) {
+            node.classList.add('visited');
+          }
+          if (nodeSection === id) {
+            node.classList.add('active');
+            node.classList.remove('visited');
+            node.setAttribute('aria-current', 'true');
+          }
+        });
+
+        // Animate cost counter
+        const targetCost = costBySection[id];
+        if (targetCost !== undefined && targetCost !== currentCost) {
+          const startCost = currentCost;
+          const diff = targetCost - startCost;
+          const startTime = performance.now();
+          const duration = 400;
+
+          railCostEl.classList.add('pulse');
+
+          function animateCost(now) {
+            const t = Math.min(1, (now - startTime) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const val = startCost + diff * eased;
+            railCostEl.textContent = '$' + val.toFixed(2);
+            if (t < 1) {
+              requestAnimationFrame(animateCost);
+            } else {
+              currentCost = targetCost;
+              setTimeout(function() {
+                railCostEl.classList.remove('pulse');
+              }, 300);
+            }
+          }
+          requestAnimationFrame(animateCost);
+        }
+      }
+    });
+  }, { threshold: 0.2 });
+
+  sectionOrder.forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) sectionObserver.observe(el);
+  });
+
+  // ============================================================
+  // RAIL — Click and Keyboard to Scroll
+  // ============================================================
+  railNodes.forEach(function(node) {
+    function activateNode() {
+      const target = document.getElementById(node.dataset.section);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    node.addEventListener('click', activateNode);
+
+    // Enter and Space activate the node for keyboard users
+    node.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activateNode();
+      }
+    });
+  });
+
+  // ============================================================
+  // "NOT YET" SEQUENCE — Triggered on Scroll-Into-View
+  // ============================================================
+  var notYetSequence = document.getElementById('not-yet-sequence');
+  var notYetFired = false;
+
+  var notYetObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !notYetFired) {
+        notYetFired = true;
+
+        var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+          ['ny-1','ny-2','ny-3','ny-now'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.classList.add('visible');
+          });
+          return;
+        }
+
+        var delays = { 'ny-1': 0, 'ny-2': 800, 'ny-3': 1600, 'ny-now': 3200 };
+        Object.keys(delays).forEach(function(id) {
+          setTimeout(function() {
+            var el = document.getElementById(id);
+            if (el) {
+              el.style.transition = 'opacity 600ms ease';
+              el.classList.add('visible');
+            }
+          }, delays[id]);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  if (notYetSequence) notYetObserver.observe(notYetSequence);
+
+  // ============================================================
+  // FLIPBOOK — Interactive Comic Viewer with Page-Turn Sound
+  // ============================================================
+  (function() {
+    var flipbook = document.getElementById('flipbook');
+    if (!flipbook) return;
+
+    var pages = flipbook.querySelectorAll('.flipbook-page');
+    var label = document.getElementById('flip-label');
+    var dotsContainer = document.getElementById('flip-dots');
+    var prevBtn = document.getElementById('flip-prev');
+    var nextBtn = document.getElementById('flip-next');
+    var currentPage = 0;
+    var isAnimating = false;
+    var audioCtx = null;
+
+    // Build dots
+    pages.forEach(function(_, i) {
+      var dot = document.createElement('button');
+      dot.className = 'flipbook-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to page ' + (i + 1));
+      dot.addEventListener('click', function() { goToPage(i); });
+      dotsContainer.appendChild(dot);
+    });
+
+    // Initialize first page
+    pages[0].classList.add('active');
+
+    // Web Audio API — synthesized page turn sound
+    function playPageTurn() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var ctx = audioCtx;
+
+        // White noise burst (paper rustle)
+        var bufferSize = ctx.sampleRate * 0.15;
+        var noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        var data = noiseBuffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * 0.3;
+        }
+        var noise = ctx.createBufferSource();
+        noise.buffer = noiseBuffer;
+
+        // Bandpass filter (make it sound like paper, not static)
+        var filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 800;
+        filter.Q.value = 0.5;
+
+        // Envelope
+        var gain = ctx.createGain();
+        var now = ctx.currentTime;
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(now);
+        noise.stop(now + 0.15);
+
+        // Soft thump (page landing)
+        var osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(120, now + 0.08);
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+        var oscGain = ctx.createGain();
+        oscGain.gain.setValueAtTime(0, now + 0.08);
+        oscGain.gain.linearRampToValueAtTime(0.06, now + 0.1);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc.connect(oscGain);
+        oscGain.connect(ctx.destination);
+        osc.start(now + 0.08);
+        osc.stop(now + 0.22);
+      } catch(e) { /* Audio not available, silent flip */ }
+    }
+
+    function updateUI() {
+      label.textContent = pages[currentPage].dataset.label || ('Page ' + (currentPage + 1));
+      var dots = dotsContainer.querySelectorAll('.flipbook-dot');
+      dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === currentPage);
+      });
+      prevBtn.style.opacity = currentPage === 0 ? '0.3' : '1';
+      nextBtn.style.opacity = currentPage === pages.length - 1 ? '0.3' : '1';
+    }
+
+    function goToPage(idx) {
+      if (idx === currentPage || idx < 0 || idx >= pages.length || isAnimating) return;
+      isAnimating = true;
+      playPageTurn();
+
+      var direction = idx > currentPage ? 1 : -1;
+      var oldPage = pages[currentPage];
+      var newPage = pages[idx];
+
+      // Set up new page position
+      newPage.style.transition = 'none';
+      newPage.classList.remove('active', 'flip-out', 'flip-in');
+      newPage.classList.add('flip-in');
+      newPage.offsetHeight; // force reflow
+
+      // Animate old page out
+      oldPage.style.transition = '';
+      oldPage.classList.remove('active');
+      oldPage.classList.add('flip-out');
+
+      // Animate new page in
+      newPage.style.transition = '';
+      newPage.classList.remove('flip-in');
+      newPage.classList.add('active');
+
+      currentPage = idx;
+      updateUI();
+
+      setTimeout(function() {
+        pages.forEach(function(p) {
+          if (p !== newPage) {
+            p.classList.remove('active', 'flip-out', 'flip-in');
+          }
+        });
+        isAnimating = false;
+      }, 520);
+    }
+
+    function next() { goToPage(currentPage + 1); }
+    function prev() { goToPage(currentPage - 1); }
+
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+
+    // Click on book area — left half = prev, right half = next
+    flipbook.addEventListener('click', function(e) {
+      var rect = flipbook.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      if (x < rect.width * 0.4) prev();
+      else if (x > rect.width * 0.6) next();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      // Only when flipbook is in view
+      var rect = flipbook.getBoundingClientRect();
+      var inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!inView) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next(); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+    });
+
+    updateUI();
+  })();
+</script>
+
+</body>
+</html>
