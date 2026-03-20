@@ -1,8 +1,36 @@
 # Polymorphic Design
 
+<p align="center">
+  <img src="readme-cover.png" alt="Polymorphic Design — A Hankweave pipeline that turns minimal instructions into beautiful artifacts" width="100%" />
+</p>
+
+
+
 A Hankweave pipeline that turns minimal instructions into beautiful, self-contained HTML artifacts.
 
 Give it a sentence about what you want — a resume, a data visualization, a landing page, a report — plus optional design assets (fonts, inspiration images, brand materials). It thinks deeply about intent, researches design references, builds in three phases (structure → character → polish), reviews its own work twice, and outputs a single self-contained HTML file with embedded fonts.
+
+## Tips
+
+**For better output:**
+- Say how it should *feel*, not just what it should contain. "Warm and editorial, like a magazine feature" beats "make a webpage."
+- Drop 2-3 inspiration images in `design-pack/inspiration/`. Even rough screenshots help.
+- Include fonts you like in `design-pack/fonts/`. The pipeline will use them.
+- Put real content in `context/`. Placeholder content is never as good.
+
+**For faster iteration:**
+- Use `--fast` for initial runs, then switch to standard mode for the final version.
+- Use `--validate` to check your setup without spending tokens.
+- Resume interrupted runs — Hankweave picks up where it left off.
+
+## Sample Project
+
+The `sample-project/` folder is a ready-to-run example with:
+- A sample instruction (interactive resume)
+- A curated design pack with open-source fonts (Satoshi, HK Grotesk, Fira Code, Cardo, and more)
+- Font pairing references and design technique images
+
+All fonts are OFL (Open Font License) or equivalent free licenses.
 
 ## Quick Start
 
@@ -114,27 +142,6 @@ A self-contained HTML file in the output directory with all fonts base64-embedde
 
 The `--fast` flag uses `hank-fast.json` — same pipeline, all Sonnet. Good for iteration, testing, and budget-conscious runs. Standard mode uses Opus for the creative and judgment-heavy steps.
 
-## Tips
-
-**For better output:**
-- Say how it should *feel*, not just what it should contain. "Warm and editorial, like a magazine feature" beats "make a webpage."
-- Drop 2-3 inspiration images in `design-pack/inspiration/`. Even rough screenshots help.
-- Include fonts you like in `design-pack/fonts/`. The pipeline will use them.
-- Put real content in `context/`. Placeholder content is never as good.
-
-**For faster iteration:**
-- Use `--fast` for initial runs, then switch to standard mode for the final version.
-- Use `--validate` to check your setup without spending tokens.
-- Resume interrupted runs — Hankweave picks up where it left off.
-
-## Sample Project
-
-The `sample-project/` folder is a ready-to-run example with:
-- A sample instruction (interactive resume)
-- A curated design pack with open-source fonts (Satoshi, HK Grotesk, Fira Code, Cardo, and more)
-- Font pairing references and design technique images
-
-All fonts are OFL (Open Font License) or equivalent free licenses.
 
 ## File Inventory
 
